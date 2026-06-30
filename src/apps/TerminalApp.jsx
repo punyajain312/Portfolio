@@ -322,9 +322,13 @@ export default function TerminalApp() {
       className="h-full flex flex-col font-mono text-xs"
       style={{ background: '#010a04', color: '#c8ffd6' }}
       onClick={() => inputRef.current?.focus()}
+      onWheel={(e) => e.stopPropagation()}
     >
       {/* Output scroll area */}
-      <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-0.5">
+      <div
+        className="flex-1 overflow-y-auto p-4 flex flex-col gap-0.5"
+        onWheel={(e) => e.stopPropagation()}
+      >
         {history.map((entry, i) => (
           <div key={i}>
             {entry.type === 'command' ? (

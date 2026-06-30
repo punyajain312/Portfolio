@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import Desktop from './components/Desktop'
-import MobileBlock from './components/MobileBlock'
+import MobileOS from './components/MobileOS'
 import { useWindowManager } from './hooks/useWindowManager'
 import { WindowContext } from './context/WindowContext'
 import { APPS } from './config/apps'
@@ -44,7 +44,7 @@ export default function App() {
     openById('terminal')
   }, [isDesktop, openById])
 
-  if (!isDesktop) return <MobileBlock />
+  if (!isDesktop) return <MobileOS />
 
   return (
     <WindowContext.Provider value={{ ...wm, openById }}>

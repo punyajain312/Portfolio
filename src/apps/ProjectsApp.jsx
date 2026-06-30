@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Folder, ExternalLink, Github, ChevronRight, Zap, Terminal } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { PROJECTS } from '../config/portfolio'
@@ -144,16 +144,28 @@ function ProjectDetail({ project }) {
 
 export default function ProjectsApp() {
   const [selected, setSelected] = useState(PROJECTS[0].id)
+  const [narrow, setNarrow] = useState(typeof window !== 'undefined' && window.innerWidth < 600)
   const project = PROJECTS.find((p) => p.id === selected)
 
+  useEffect(() => {
+    const fn = () => setNarrow(window.innerWidth < 600)
+    window.addEventListener('resize', fn)
+    return () => window.removeEventListener('resize', fn)
+  }, [])
+
   return (
-    <div className="flex h-full">
-      {/* Sidebar */}
+    <div className={`flex h-full ${narrow ? 'flex-col' : ''}`}>
+      {/* Sidebar / top list */}
       <div
-        className="w-48 shrink-0 flex flex-col overflow-y-auto py-2"
-        style={{ borderRight: '1px solid var(--border)', background: 'var(--bg-elevated)' }}
+        className={`flex overflow-y-auto py-2 ${narrow ? 'w-full shrink-0 flex-row overflow-x-auto overflow-y-hidden' : 'w-48 shrink-0 flex-col'}`}
+        style={{
+          borderRight: narrow ? 'none' : '1px solid var(--border)',
+          borderBottom: narrow ? '1px solid var(--border)' : 'none',
+          background: 'var(--bg-elevated)',
+          height: narrow ? 56 : undefined,
+        }}
       >
-        <div className="flex items-center gap-1.5 px-4 pb-2 pt-1">
+        <div className={`flex items-center gap-1.5 px-4 pb-2 pt-1 ${narrow ? 'sticky left-0' : ''}`}>
           <Terminal size={10} style={{ color: 'var(--text-dim)' }} />
           <p className="text-[10px] font-semibold uppercase tracking-widest font-mono" style={{ color: 'var(--text-dim)' }}>
             ~/projects
@@ -165,7 +177,7 @@ export default function ProjectsApp() {
             <button
               key={p.id}
               onClick={() => setSelected(p.id)}
-              className="flex items-center gap-2 px-3 py-2 mx-1 rounded-lg text-left transition-all"
+              className={`flex items-center gap-2 px-3 py-2 mx-1 rounded-lg text-left transition-all ${narrow ? 'shrink-0' : ''}`}
               style={{
                 background: isActive ? `${p.color}12` : 'transparent',
                 border: isActive ? `1px solid ${p.color}25` : '1px solid transparent',

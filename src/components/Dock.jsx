@@ -106,24 +106,16 @@ function DockIcon({ app, onOpen, isOpen }) {
   )
 }
 
-export default function Dock({ onOpen, openWindowIds }) {
+export default function Dock({ onOpen, openWindowIds, visible }) {
   return (
-    // Outer wrapper: same bg as desktop so no white strip
-    <div
-      className="shrink-0 flex items-end justify-center"
-      style={{
-        height: 90,
-        background: 'var(--bg-desktop)',
-        paddingBottom: 8,
-        zIndex: 40,
-        position: 'relative',
-      }}
+    <motion.div
+      className="shrink-0 flex items-end justify-center overflow-hidden"
+      animate={{ height: visible ? 90 : 0, opacity: visible ? 1 : 0 }}
+      initial={{ height: 0, opacity: 0 }}
+      transition={{ type: 'spring', stiffness: 380, damping: 36, mass: 0.9 }}
+      style={{ background: 'var(--bg-desktop)', zIndex: 40, position: 'relative' }}
     >
-      {/* Top border line */}
-      <div
-        className="absolute top-0 left-0 right-0 h-px"
-        style={{ background: 'linear-gradient(90deg, transparent, var(--border), transparent)' }}
-      />
+      <div className="absolute inset-x-0 top-0 h-px shrink-0" style={{ background: 'linear-gradient(90deg, transparent, var(--border), transparent)' }} />
 
       {/* Glass pill */}
       <div
@@ -133,6 +125,7 @@ export default function Dock({ onOpen, openWindowIds }) {
           border: '1px solid rgba(0, 255, 100, 0.12)',
           boxShadow: '0 -4px 32px rgba(0,0,0,0.4), 0 8px 40px rgba(0,0,0,0.6), inset 0 1px 0 rgba(0,255,100,0.08)',
           overflow: 'visible',
+          marginBottom: 8,
         }}
       >
         {APPS.map((app) => (
@@ -144,6 +137,6 @@ export default function Dock({ onOpen, openWindowIds }) {
           />
         ))}
       </div>
-    </div>
+    </motion.div>
   )
 }

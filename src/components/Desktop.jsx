@@ -50,18 +50,18 @@ function FloatingCode({ text, x, y, delay }) {
   )
 }
 
-// Desktop icon positions — scattered organic feel, not a column
-const ICON_POSITIONS = [
-  { id: 'about',     right: 20, top: 12 },
-  { id: 'projects',  right: 20, top: 90 },
-  { id: 'contact',   right: 20, top: 168 },
-]
+// Two columns of desktop icons (right side of screen)
+// Column A (right=8):  terminal, about, projects, contact
+// Column B (right=92): github, linkedin, leetcode, instagram
+const COL_A = ['terminal', 'about', 'projects', 'contact']
+const COL_B = ['github', 'linkedin', 'leetcode', 'instagram']
 
 export default function Desktop({ dark, toggleDark, windows, openWindow, closeWindow, focusWindow, minimizeWindow, toggleMaximize, updatePosition, updateSize }) {
   const openWindowIds = windows.map(w => w.id)
+  const hasWindows = windows.length > 0
 
-  // Only show 3 key icons on the desktop; rest are in the dock
-  const deskApps = APPS.filter(a => ['about', 'projects', 'contact'].includes(a.id))
+  const colA = APPS.filter(a => COL_A.includes(a.id)).sort((a, b) => COL_A.indexOf(a.id) - COL_A.indexOf(b.id))
+  const colB = APPS.filter(a => COL_B.includes(a.id)).sort((a, b) => COL_B.indexOf(a.id) - COL_B.indexOf(b.id))
 
   return (
     <div className="flex flex-col h-screen overflow-hidden" style={{ background: 'var(--bg-desktop)' }}>
@@ -96,15 +96,28 @@ export default function Desktop({ dark, toggleDark, windows, openWindow, closeWi
           }}
         />
 
-        {/* Desktop icons — top-right, staggered */}
-        <div className="absolute top-0 right-0">
-          {deskApps.map((app, i) => (
+        {/* Desktop icons — two columns, top-right */}
+        <div className="absolute top-0 right-0 pointer-events-none" style={{ width: 184 }}>
+          {colA.map((app, i) => (
             <motion.div
               key={app.id}
+              className="pointer-events-auto"
               initial={{ opacity: 0, x: 20, scale: 0.85 }}
               animate={{ opacity: 1, x: 0, scale: 1 }}
-              transition={{ delay: 0.15 + i * 0.08, type: 'spring', stiffness: 340, damping: 28 }}
-              style={{ position: 'absolute', right: 12, top: 12 + i * 82 }}
+              transition={{ delay: 0.08 + i * 0.06, type: 'spring', stiffness: 340, damping: 28 }}
+              style={{ position: 'absolute', right: 8, top: 12 + i * 80 }}
+            >
+              <DesktopIcon app={app} onOpen={openWindow} />
+            </motion.div>
+          ))}
+          {colB.map((app, i) => (
+            <motion.div
+              key={app.id}
+              className="pointer-events-auto"
+              initial={{ opacity: 0, x: 20, scale: 0.85 }}
+              animate={{ opacity: 1, x: 0, scale: 1 }}
+              transition={{ delay: 0.12 + i * 0.06, type: 'spring', stiffness: 340, damping: 28 }}
+              style={{ position: 'absolute', right: 92, top: 12 + i * 80 }}
             >
               <DesktopIcon app={app} onOpen={openWindow} />
             </motion.div>
@@ -128,7 +141,7 @@ export default function Desktop({ dark, toggleDark, windows, openWindow, closeWi
         </AnimatePresence>
       </div>
 
-      <Dock onOpen={openWindow} openWindowIds={openWindowIds} />
+      <Dock onOpen={openWindow} openWindowIds={openWindowIds} visible={hasWindows} />
     </div>
   )
 }
