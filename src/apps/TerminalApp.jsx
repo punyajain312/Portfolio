@@ -132,12 +132,12 @@ export default function TerminalApp() {
     const timers = BOOT.map(({ ms, line }) =>
       setTimeout(() => setHistory(h => [...h, { type: 'output', lines: [line] }]), ms)
     )
-    timers.push(setTimeout(() => { setReady(true); inputRef.current?.focus() }, 2300))
+    timers.push(setTimeout(() => { setReady(true); inputRef.current?.focus({ preventScroll: true }) }, 2300))
     return () => timers.forEach(clearTimeout)
   }, [])
 
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
+    bottomRef.current?.scrollIntoView({ behavior: 'auto', block: 'end' })
   }, [history])
 
   // ── Command table ─────────────────────────────────────────
@@ -355,7 +355,6 @@ export default function TerminalApp() {
               value={input}
               onChange={e => setInput(e.target.value)}
               onKeyDown={onKey}
-              autoFocus
               className="flex-1 bg-transparent outline-none border-none"
               style={{ color: '#e0ffe8', fontFamily: 'inherit', fontSize: 'inherit', caretColor: '#00ff7f' }}
               spellCheck={false}

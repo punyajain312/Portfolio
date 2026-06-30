@@ -17,12 +17,10 @@ function DockIcon({ app, onOpen, isOpen }) {
   }
 
   return (
-    // FIXED-WIDTH container — the button scales via CSS transform (no layout shift)
     <div
       className="flex flex-col items-center"
       style={{ width: 56, flexShrink: 0, position: 'relative' }}
     >
-      {/* Tooltip */}
       <AnimatePresence>
         {hovered && (
           <motion.div
@@ -45,7 +43,6 @@ function DockIcon({ app, onOpen, isOpen }) {
         )}
       </AnimatePresence>
 
-      {/* Icon button — scale via CSS transform only (no layout effect) */}
       <motion.button
         aria-label={isExternal ? `Open ${app.label} externally` : `Open ${app.label}`}
         onClick={handleClick}
@@ -57,7 +54,6 @@ function DockIcon({ app, onOpen, isOpen }) {
         className="relative flex items-center justify-center rounded-2xl focus:outline-none"
         style={{ width: 48, height: 48 }}
       >
-        {/* BG layer */}
         <div
           className="absolute inset-0 rounded-2xl transition-all duration-200"
           style={{
@@ -76,7 +72,6 @@ function DockIcon({ app, onOpen, isOpen }) {
           style={{ color: app.color, position: 'relative', zIndex: 1 }}
         />
 
-        {/* External link badge */}
         {isExternal && (
           <div
             className="absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full flex items-center justify-center"
@@ -87,7 +82,6 @@ function DockIcon({ app, onOpen, isOpen }) {
         )}
       </motion.button>
 
-      {/* Open indicator */}
       <motion.div
         animate={{ opacity: isOpen ? 1 : 0, scale: isOpen ? 1 : 0 }}
         transition={{ type: 'spring', stiffness: 400, damping: 30 }}
@@ -95,7 +89,6 @@ function DockIcon({ app, onOpen, isOpen }) {
         style={{ background: app.color }}
       />
 
-      {/* Label */}
       <span
         className="text-[9px] font-medium text-center mt-0.5 pointer-events-none"
         style={{ color: hovered ? app.color : 'rgba(255,255,255,0.35)' }}
@@ -108,16 +101,16 @@ function DockIcon({ app, onOpen, isOpen }) {
 
 export default function Dock({ onOpen, openWindowIds, visible }) {
   return (
+    // Absolute inside the desktop flex-1 div — never shifts layout when it appears/disappears
     <motion.div
-      className="shrink-0 flex items-end justify-center overflow-hidden"
-      animate={{ height: visible ? 90 : 0, opacity: visible ? 1 : 0 }}
-      initial={{ height: 0, opacity: 0 }}
+      className="absolute bottom-0 left-0 right-0 flex items-end justify-center"
+      animate={{ y: visible ? 0 : 100, opacity: visible ? 1 : 0 }}
+      initial={{ y: 100, opacity: 0 }}
       transition={{ type: 'spring', stiffness: 380, damping: 36, mass: 0.9 }}
-      style={{ background: 'var(--bg-desktop)', zIndex: 40, position: 'relative' }}
+      style={{ height: 90, zIndex: 40, pointerEvents: visible ? 'auto' : 'none' }}
     >
-      <div className="absolute inset-x-0 top-0 h-px shrink-0" style={{ background: 'linear-gradient(90deg, transparent, var(--border), transparent)' }} />
+      <div className="absolute inset-x-0 top-0 h-px" style={{ background: 'linear-gradient(90deg, transparent, var(--border), transparent)' }} />
 
-      {/* Glass pill */}
       <div
         className="flex items-end gap-1.5 px-4 py-2.5 rounded-2xl glass"
         style={{

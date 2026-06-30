@@ -21,8 +21,9 @@ export default function Window({ windowState, onClose, onFocus, onMinimize, onMa
         background: 'var(--window-titlebar)',
         borderBottom: '1px solid var(--border)',
         borderRadius: '12px 12px 0 0',
-        cursor: 'default',
+        cursor: 'grab',
         position: 'relative',
+        touchAction: 'none',
       }}
     >
       {/* Traffic lights */}
