@@ -1,0 +1,119 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── Theme tokens ────────────────────────────────────────── */
+:root {
+  --bg-desktop: #f0f4f0;
+  --bg-surface: #ffffff;
+  --bg-elevated: #f4f8f4;
+  --bg-hover: #ebf2eb;
+  --border: rgba(0, 0, 0, 0.08);
+  --accent: #00aa55;
+  --accent-dim: rgba(0, 170, 85, 0.12);
+  --text-primary: #0a1a0c;
+  --text-secondary: #3a6a42;
+  --text-dim: #8aaa90;
+  --menubar-bg: rgba(240, 248, 240, 0.85);
+  --window-titlebar: #f0f7f0;
+}
+
+/* ── DARK = Neon Terminal ─────────────────────────────────── */
+.dark {
+  --bg-desktop: #020c04;
+  --bg-surface: #060f08;
+  --bg-elevated: #0a180c;
+  --bg-hover: #102015;
+  --border: rgba(0, 255, 100, 0.1);
+  --accent: #00ff7f;
+  --accent-dim: rgba(0, 255, 127, 0.12);
+  --text-primary: #c8ffd6;
+  --text-secondary: #4a9a58;
+  --text-dim: #1e4028;
+  --menubar-bg: rgba(2, 12, 4, 0.88);
+  --window-titlebar: #091209;
+}
+
+/* ── Base — CRITICAL: fills full viewport so no white shows ── */
+html { height: 100%; background: var(--bg-desktop); }
+body {
+  height: 100%;
+  overflow: hidden;
+  user-select: none;
+  font-family: 'Inter', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  background: var(--bg-desktop);
+}
+#root {
+  height: 100%;
+  overflow: hidden;
+  background: var(--bg-desktop);
+}
+
+.window-content { user-select: text; }
+
+/* ── Scrollbar ───────────────────────────────────────────── */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent-dim); }
+
+/* ── Desktop background — dark = neon terminal ───────────── */
+.desktop-bg {
+  background: var(--bg-desktop);
+}
+.dark .desktop-bg {
+  background:
+    radial-gradient(ellipse at 10% 15%, rgba(0,255,80,0.07) 0%, transparent 45%),
+    radial-gradient(ellipse at 90% 85%, rgba(0,200,255,0.06) 0%, transparent 45%),
+    radial-gradient(ellipse at 50% 50%, rgba(0,60,20,0.3) 0%, transparent 70%),
+    #020c04;
+}
+
+/* ── Matrix dot grid ─────────────────────────────────────── */
+.matrix-dots {
+  background-image: radial-gradient(circle, rgba(0,255,100,0.12) 1px, transparent 1px);
+  background-size: 36px 36px;
+}
+
+/* ── Scanline sweep ──────────────────────────────────────── */
+@keyframes scanline {
+  0%   { transform: translateY(-4px); opacity: 0; }
+  5%   { opacity: 1; }
+  95%  { opacity: 1; }
+  100% { transform: translateY(100vh); opacity: 0; }
+}
+.scanline-sweep::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(0, 255, 100, 0.04) 50%,
+    transparent 100%
+  );
+  background-size: 100% 4px;
+  background-repeat: repeat-y;
+  animation: scanline 8s linear infinite;
+}
+
+/* ── Neon glow pulse ─────────────────────────────────────── */
+@keyframes neon-glow {
+  0%, 100% { box-shadow: 0 0 8px rgba(0, 255, 127, 0.25), 0 0 24px rgba(0, 255, 127, 0.1); }
+  50%       { box-shadow: 0 0 16px rgba(0, 255, 127, 0.45), 0 0 48px rgba(0, 255, 127, 0.15); }
+}
+.neon-pulse { animation: neon-glow 3s ease-in-out infinite; }
+
+/* ── Glass morphism ──────────────────────────────────────── */
+.glass {
+  backdrop-filter: blur(24px) saturate(160%);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
+}
+
+/* ── No drag on images ───────────────────────────────────── */
+img { -webkit-user-drag: none; pointer-events: none; }
+
+/* ── Rnd handles ─────────────────────────────────────────── */
+.react-rnd-handle { z-index: 10 !important; }
